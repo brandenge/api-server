@@ -5,9 +5,7 @@ const { clothesValidator } = require('../middleware/validator');
 const { clothesInterface } = require('../models');
 const router = express.Router();
 
-router.use(clothesValidator);
-
-router.post('/clothes', async (req, res, next) => {
+router.post('/clothes', clothesValidator, async (req, res, next) => {
   try {
     const newClothing = await clothesInterface.create(req.body);
     res.status(201).send(newClothing);
@@ -34,7 +32,7 @@ router.get('/clothes/:id', async (req, res, next) => {
   }
 });
 
-router.put('clothes/:id', async (req, res, next) => {
+router.put('/clothes/:id', clothesValidator, async (req, res, next) => {
   try {
     const updatedClothing = await clothesInterface.update(req.body, req.params.id);
     res.status(201).send(updatedClothing);
@@ -43,7 +41,7 @@ router.put('clothes/:id', async (req, res, next) => {
   }
 });
 
-router.delete('clothes/:id', async (req, res, next) => {
+router.delete('/clothes/:id', async (req, res, next) => {
   try {
     const message = await clothesInterface.delete(req.params.id);
     res.status(204).send(message);
