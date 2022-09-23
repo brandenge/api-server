@@ -1,15 +1,15 @@
 'use strict';
 
 const express = require('express');
-const validator = require('../middleware/validator');
-const { IngredientsModel } = require('../models');
+const { ingredientsValidator } = require('../middleware/validator');
+const { ingredientsInterface } = require('../models');
 const router = express.Router();
 
-router.use(validator);
+router.use(ingredientsValidator);
 
 router.post('/ingredients', async (req, res, next) => {
   try {
-    const newIngredient = await IngredientsModel.create(req.body);
+    const newIngredient = await ingredientsInterface.create(req.body);
     res.status(201).send(newIngredient);
   } catch (error) {
     next(error);
@@ -18,8 +18,8 @@ router.post('/ingredients', async (req, res, next) => {
 
 router.get('/ingredients', async (req, res, next) => {
   try {
-    const allIngredients = await IngredientsModel.findAll();
-    res.status(200).send(allIngredients);
+    const ingredients = await ingredientsInterface.read();
+    res.status(200).send(ingredients);
   } catch (error) {
     next(error);
   }
@@ -27,9 +27,8 @@ router.get('/ingredients', async (req, res, next) => {
 
 router.get('/ingredients/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const Ingredient = await IngredientsModel.findOne({ where: { id } });
-    res.status(200).send(Ingredient);
+    const ingredient = await ingredientsInterface.read(req.params.id);
+    res.status(200).send(ingredient);
   } catch (error) {
     next(error);
   }
@@ -37,9 +36,7 @@ router.get('/ingredients/:id', async (req, res, next) => {
 
 router.put('ingredients/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    await IngredientsModel.update(req.body, { where: { id } });
-    const updatedIngredient = await IngredientsModel.findOne({ where: { id } });
+    const updatedIngredient = await ingredientsInterface.update(req.body, req.params.id);
     res.status(201).send(updatedIngredient);
   } catch (error) {
     next(error);
@@ -48,9 +45,8 @@ router.put('ingredients/:id', async (req, res, next) => {
 
 router.delete('ingredients/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    await IngredientsModel.destroy({ where: { id } });
-    res.status(204).send('Success! Ingredient deleted.');
+    const message = await ingredientsInterface.delete(req.params.id);
+    res.status(204).send(message);
   } catch (error) {
     next(error);
   }

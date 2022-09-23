@@ -1,11 +1,15 @@
 'use strict';
 
-function validator(req, res, next) {
-  if (req.params.name) {
-    next();
-  } else {
-    next('There is no name provided. The path must have an id parameter');
-  }
+function clothesValidator(req, res, next) {
+  const { type, material, color } = req.body;
+  if (type && material && color) next();
+  else next('ERROR: A clothes request must have type, material, and color properties.');
 }
 
-module.exports = validator;
+function ingredientsValidator(req, res, next) {
+  const { name, type } = req.body;
+  if (name && type) next();
+  else next('ERROR: An ingredients request must have a name and type properties.');
+}
+
+module.exports = { clothesValidator, ingredientsValidator };
