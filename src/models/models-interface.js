@@ -45,7 +45,7 @@ class ModelInterface {
   async delete(id) {
     try {
       await this.model.destroy({ where: { id } });
-      return 'Record deleted';
+      return 'Record successfully deleted.';
     } catch (error) {
       console.error('Error in ModelInterface delete:', error);
       return error;
